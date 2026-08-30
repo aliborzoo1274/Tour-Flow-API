@@ -67,6 +67,7 @@ public class TravelerService {
 
     private TravelerResponse toResponse(Traveler traveler) {
         return new TravelerResponse(
+                traveler.getId(),
                 traveler.getName(),
                 traveler.getSurname(),
                 traveler.getAge(),
