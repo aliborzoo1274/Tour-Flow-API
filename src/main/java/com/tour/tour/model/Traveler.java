@@ -1,8 +1,6 @@
 package com.tour.tour.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -11,21 +9,22 @@ import jakarta.persistence.Table;
 public class Traveler {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String surname;
     private Integer age;
+    private String password;
     private String paymentStatus;
 
     public Traveler() {
     }
 
-    public Traveler(String name, String surname, Integer age, String paymentStatus) {
+    public Traveler(Long id, String name, String surname, Integer age, String password, String paymentStatus) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
+        this.password = password;
         this.paymentStatus = paymentStatus;
     }
 
@@ -55,6 +54,14 @@ public class Traveler {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPaymentStatus() {

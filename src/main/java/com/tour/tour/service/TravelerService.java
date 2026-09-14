@@ -34,9 +34,11 @@ public class TravelerService {
 
     public TravelerResponse createTraveler(TravelerRequest request) {
         Traveler traveler = new Traveler(
+                request.getId(),
                 request.getName(),
                 request.getSurname(),
                 request.getAge(),
+                request.getPassword(),
                 "UNPAYED"
         );
 
@@ -51,6 +53,7 @@ public class TravelerService {
         traveler.setName(request.getName());
         traveler.setSurname(request.getSurname());
         traveler.setAge(request.getAge());
+        traveler.setPassword(request.getPassword());
         traveler.setPaymentStatus("UNPAYED");
 
         Traveler updatedTraveler = travelerRepository.save(traveler);
@@ -71,6 +74,7 @@ public class TravelerService {
                 traveler.getName(),
                 traveler.getSurname(),
                 traveler.getAge(),
+                traveler.getPassword(),
                 traveler.getPaymentStatus()
         );
     }

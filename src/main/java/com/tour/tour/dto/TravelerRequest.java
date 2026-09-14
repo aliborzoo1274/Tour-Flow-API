@@ -6,6 +6,10 @@ import jakarta.validation.constraints.NotNull;
 
 public class TravelerRequest {
 
+    @NotBlank (message = "National ID cannot be blank")
+    @Min(value = 1, message = "National ID must be greater than 0")
+    private Long id;
+
     @NotBlank(message = "Name cannot be blank")
     private String name;
 
@@ -16,7 +20,19 @@ public class TravelerRequest {
     @Min(value = 0, message = "Age must be greater than or equal to 0")
     private Integer age;
 
+    @NotBlank (message = "Password cannot be blank")
+    @Min (value = 6, message = "Password must be at least 6 characters long")
+    private String password;
+
     public TravelerRequest() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -43,4 +59,11 @@ public class TravelerRequest {
         this.age = age;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
