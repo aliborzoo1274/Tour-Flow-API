@@ -14,7 +14,6 @@ public class TravelerUpdateRequest {
     @NotNull(message = "Age cannot be null")
     private Integer age;
 
-    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @NotBlank(message = "Payment status cannot be blank")

@@ -76,7 +76,10 @@ public class TravelerService {
         traveler.setName(request.getName());
         traveler.setSurname(request.getSurname());
         traveler.setAge(request.getAge());
-        traveler.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            traveler.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
 
         if (!request.getPaymentStatus().equals(traveler.getPaymentStatus())) {
             if (!isAdmin) {
