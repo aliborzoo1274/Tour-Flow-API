@@ -7,14 +7,14 @@ public class TravelerResponse {
     private String surname;
     private Integer age;
     private String paymentStatus;
-    private String password;
+    private String role;
 
-    public TravelerResponse(Long id, String name, String surname, Integer age, String password, String paymentStatus) {
+    public TravelerResponse(Long id, String name, String surname, Integer age, String role, String paymentStatus) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
-        this.password = password;
+        this.role = role;
         this.paymentStatus = paymentStatus;
     }
 
@@ -38,7 +38,7 @@ public class TravelerResponse {
         return paymentStatus;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 }

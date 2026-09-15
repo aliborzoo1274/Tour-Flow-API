@@ -1,6 +1,8 @@
 package com.tour.tour.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -16,16 +18,20 @@ public class Traveler {
     private String password;
     private String paymentStatus;
 
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     public Traveler() {
     }
 
-    public Traveler(Long id, String name, String surname, Integer age, String password, String paymentStatus) {
+    public Traveler(Long id, String name, String surname, Integer age, String password, String paymentStatus, Role role) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.password = password;
         this.paymentStatus = paymentStatus;
+        this.role = role;
     }
 
     public Long getId() {
@@ -70,5 +76,13 @@ public class Traveler {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

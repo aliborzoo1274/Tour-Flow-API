@@ -2,13 +2,8 @@ package com.tour.tour.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
-public class TravelerRequest {
-
-    @NotNull(message = "ID cannot be null")
-    @Positive(message = "ID must be greater than 0")
-    private Long id;
+public class TravelerUpdateRequest {
 
     @NotBlank(message = "Name cannot be blank")
     private String name;
@@ -22,15 +17,13 @@ public class TravelerRequest {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    public TravelerRequest() {
-    }
+    @NotBlank(message = "Payment status cannot be blank")
+    private String paymentStatus;
 
-    public Long getId() {
-        return id;
-    }
+    @NotBlank(message = "Role cannot be blank")
+    private String role;
 
-    public void setId(Long id) {
-        this.id = id;
+    public TravelerUpdateRequest() {
     }
 
     public String getName() {
@@ -63,5 +56,21 @@ public class TravelerRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
