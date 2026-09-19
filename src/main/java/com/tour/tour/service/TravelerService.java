@@ -6,7 +6,6 @@ import com.tour.tour.dto.TravelerUpdateRequest;
 import com.tour.tour.exception.ResourceNotFoundException;
 import com.tour.tour.exception.DuplicateResourceException;
 import com.tour.tour.model.Traveler;
-import com.tour.tour.model.Role;
 import com.tour.tour.repository.TravelerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,8 +55,7 @@ public class TravelerService {
                 request.getSurname(),
                 request.getAge(),
                 passwordEncoder.encode(request.getPassword()),
-                "UNPAYED",
-                Role.USER
+                "UNPAYED"
         );
 
         Traveler savedTraveler = travelerRepository.save(traveler);
@@ -88,18 +86,6 @@ public class TravelerService {
             traveler.setPaymentStatus(request.getPaymentStatus());
         }
 
-        if (!request.getRole().equalsIgnoreCase(traveler.getRole().name())) {
-            if (!isAdmin) {
-                throw new AccessDeniedException("You do not have permission to modify the role.");
-            }
-            try {
-                Role role = Role.valueOf(request.getRole().trim().toUpperCase());
-                traveler.setRole(role);
-            } catch (IllegalArgumentException ex) {
-                throw new IllegalArgumentException("Invalid role: " + request.getRole());
-            }
-        }
-
         Traveler updatedTraveler = travelerRepository.save(traveler);
         return toResponse(updatedTraveler);
     }
@@ -121,7 +107,6 @@ public class TravelerService {
                 traveler.getName(),
                 traveler.getSurname(),
                 traveler.getAge(),
-                traveler.getRole().name(),
                 traveler.getPaymentStatus()
         );
     }

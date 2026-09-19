@@ -19,9 +19,6 @@ public class TravelerUpdateRequest {
     @NotBlank(message = "Payment status cannot be blank")
     private String paymentStatus;
 
-    @NotBlank(message = "Role cannot be blank")
-    private String role;
-
     public TravelerUpdateRequest() {
     }
 
@@ -63,13 +60,5 @@ public class TravelerUpdateRequest {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

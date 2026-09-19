@@ -1,5 +1,6 @@
 package com.tour.tour.controller;
 
+import com.tour.tour.dto.AdminLoginRequest;
 import com.tour.tour.dto.AuthResponse;
 import com.tour.tour.dto.LoginRequest;
 import com.tour.tour.security.JwtService;
@@ -27,8 +28,8 @@ public class AuthController {
         this.users = users;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    @PostMapping("/login/user")
+    public ResponseEntity<AuthResponse> loginUser(@Valid @RequestBody LoginRequest request) {
 
         String id = String.valueOf(request.getId());
 
@@ -37,11 +38,21 @@ public class AuthController {
         );
 
         var user = users.loadUserByUsername(id);
-        
-        String role = user.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))
-                ? "ADMIN" : "USER";
-
         var token = jwtService.generateToken(user);
-        return ResponseEntity.ok(new AuthResponse(token, role));
+        
+        return ResponseEntity.ok(new AuthResponse(token, "USER"));
+    }
+
+    @PostMapping("/login/admin")
+    public ResponseEntity<AuthResponse> loginAdmin(@Valid @RequestBody AdminLoginRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
+
+        var user = users.loadUserByUsername(request.getUsername());
+        var token = jwtService.generateToken(user);
+        
+        return ResponseEntity.ok(new AuthResponse(token, "ADMIN"));
     }
 }

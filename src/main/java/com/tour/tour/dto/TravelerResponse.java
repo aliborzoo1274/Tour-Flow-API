@@ -7,14 +7,12 @@ public class TravelerResponse {
     private String surname;
     private Integer age;
     private String paymentStatus;
-    private String role;
 
-    public TravelerResponse(Long id, String name, String surname, Integer age, String role, String paymentStatus) {
+    public TravelerResponse(Long id, String name, String surname, Integer age, String paymentStatus) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.age = age;
-        this.role = role;
         this.paymentStatus = paymentStatus;
     }
 
@@ -36,9 +34,5 @@ public class TravelerResponse {
 
     public String getPaymentStatus() {
         return paymentStatus;
-    }
-
-    public String getRole() {
-        return role;
     }
 }
