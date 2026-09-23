@@ -31,13 +31,13 @@ public class AuthController {
     @PostMapping("/login/user")
     public ResponseEntity<AuthResponse> loginUser(@Valid @RequestBody LoginRequest request) {
 
-        String id = String.valueOf(request.getId());
+        String prefixedId = "USER_" + request.getId();
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(id, request.getPassword())
+                new UsernamePasswordAuthenticationToken(prefixedId, request.getPassword())
         );
 
-        var user = users.loadUserByUsername(id);
+        var user = users.loadUserByUsername(prefixedId);
         var token = jwtService.generateToken(user);
         
         return ResponseEntity.ok(new AuthResponse(token, "USER"));
@@ -46,11 +46,13 @@ public class AuthController {
     @PostMapping("/login/admin")
     public ResponseEntity<AuthResponse> loginAdmin(@Valid @RequestBody AdminLoginRequest request) {
 
+        String prefixedUsername = "ADMIN_" + request.getUsername();
+
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(prefixedUsername, request.getPassword())
         );
 
-        var user = users.loadUserByUsername(request.getUsername());
+        var user = users.loadUserByUsername(prefixedUsername);
         var token = jwtService.generateToken(user);
         
         return ResponseEntity.ok(new AuthResponse(token, "ADMIN"));

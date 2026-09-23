@@ -27,28 +27,34 @@ public class TourUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        Optional<Admin> adminOpt = adminRepo.findById(username);
-        if (adminOpt.isPresent()) {
-            Admin admin = adminOpt.get();
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(admin.getUsername())
-                    .password(admin.getPassword())
-                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))
-                    .build();
+        if (username.startsWith("ADMIN_")) {
+            String actualUsername = username.substring(6);
+            Optional<Admin> adminOpt = adminRepo.findById(actualUsername);
+            if (adminOpt.isPresent()) {
+                Admin admin = adminOpt.get();
+                return org.springframework.security.core.userdetails.User
+                        .withUsername(username)
+                        .password(admin.getPassword())
+                        .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                        .build();
+            }
+        } else if (username.startsWith("USER_")) {
+            String actualId = username.substring(5);
+            try {
+                Long travelerId = Long.valueOf(actualId);
+                Traveler traveler = travelerRepo.findById(travelerId)
+                        .orElseThrow(() -> new UsernameNotFoundException("Traveler not found"));
+
+                return org.springframework.security.core.userdetails.User
+                        .withUsername(username)
+                        .password(traveler.getPassword())
+                        .authorities(new SimpleGrantedAuthority("ROLE_USER"))
+                        .build();
+            } catch (NumberFormatException e) {
+                throw new UsernameNotFoundException("Invalid user format");
+            }
         }
 
-        try {
-            Long travelerId = Long.valueOf(username);
-            Traveler traveler = travelerRepo.findById(travelerId)
-                    .orElseThrow(() -> new UsernameNotFoundException("Traveler not found"));
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(String.valueOf(traveler.getId()))
-                    .password(traveler.getPassword())
-                    .authorities(new SimpleGrantedAuthority("ROLE_USER"))
-                    .build();
-        } catch (NumberFormatException e) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        throw new UsernameNotFoundException("User not found");
     }
 }
