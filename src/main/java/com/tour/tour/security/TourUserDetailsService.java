@@ -29,7 +29,7 @@ public class TourUserDetailsService implements UserDetailsService {
 
         if (username.startsWith("ADMIN_")) {
             String actualUsername = username.substring(6);
-            Optional<Admin> adminOpt = adminRepo.findById(actualUsername);
+            Optional<Admin> adminOpt = adminRepo.findByUsername(actualUsername);
             if (adminOpt.isPresent()) {
                 Admin admin = adminOpt.get();
                 return org.springframework.security.core.userdetails.User
@@ -40,19 +40,14 @@ public class TourUserDetailsService implements UserDetailsService {
             }
         } else if (username.startsWith("USER_")) {
             String actualId = username.substring(5);
-            try {
-                Long travelerId = Long.valueOf(actualId);
-                Traveler traveler = travelerRepo.findById(travelerId)
-                        .orElseThrow(() -> new UsernameNotFoundException("Traveler not found"));
+            Traveler traveler = travelerRepo.findByNid(actualId)
+                    .orElseThrow(() -> new UsernameNotFoundException("Traveler not found"));
 
-                return org.springframework.security.core.userdetails.User
-                        .withUsername(username)
-                        .password(traveler.getPassword())
-                        .authorities(new SimpleGrantedAuthority("ROLE_USER"))
-                        .build();
-            } catch (NumberFormatException e) {
-                throw new UsernameNotFoundException("Invalid user format");
-            }
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(username)
+                    .password(traveler.getPassword())
+                    .authorities(new SimpleGrantedAuthority("ROLE_USER"))
+                    .build();
         }
 
         throw new UsernameNotFoundException("User not found");

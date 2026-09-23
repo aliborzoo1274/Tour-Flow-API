@@ -31,7 +31,7 @@ public class AuthController {
     @PostMapping("/login/user")
     public ResponseEntity<AuthResponse> loginUser(@Valid @RequestBody LoginRequest request) {
 
-        String prefixedId = "USER_" + request.getId();
+        String prefixedId = "USER_" + request.getNid();
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(prefixedId, request.getPassword())

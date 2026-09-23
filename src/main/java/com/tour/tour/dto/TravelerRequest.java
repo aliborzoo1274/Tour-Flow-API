@@ -2,13 +2,13 @@ package com.tour.tour.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Pattern;
 
 public class TravelerRequest {
 
-    @NotNull(message = "ID cannot be null")
-    @Positive(message = "ID must be greater than 0")
-    private Long id;
+    @NotBlank(message = "NID cannot be blank")
+    @Pattern(regexp = "^\\d{10}$", message = "NID must be exactly 10 digits")
+    private String nid;
 
     @NotBlank(message = "Name cannot be blank")
     private String name;
@@ -19,18 +19,22 @@ public class TravelerRequest {
     @NotNull(message = "Age cannot be null")
     private Integer age;
 
+    @NotBlank(message = "Phone number cannot be blank")
+    @Pattern(regexp = "^\\d{11}$", message = "Phone number must be exactly 11 digits")
+    private String phoneNumber;
+
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
     public TravelerRequest() {
     }
 
-    public Long getId() {
-        return id;
+    public String getNid() {
+        return nid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setNid(String nid) {
+        this.nid = nid;
     }
 
     public String getName() {
@@ -55,6 +59,14 @@ public class TravelerRequest {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {

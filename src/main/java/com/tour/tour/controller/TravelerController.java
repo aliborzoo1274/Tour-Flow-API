@@ -28,7 +28,7 @@ public class TravelerController {
         return ResponseEntity.ok(travelerService.getAllTravelers());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and ('USER_' + #id.toString()) == authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity<TravelerResponse> getTraveler(@PathVariable Long id) {
         return ResponseEntity.ok(travelerService.getTravelerById(id));
@@ -40,7 +40,7 @@ public class TravelerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and ('USER_' + #id.toString()) == authentication.name)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @PutMapping("/{id}")
     public ResponseEntity<TravelerResponse> updateTraveler(@PathVariable Long id,
                                                           @Valid @RequestBody TravelerUpdateRequest request) {

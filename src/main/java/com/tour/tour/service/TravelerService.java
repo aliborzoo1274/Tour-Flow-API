@@ -14,8 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TravelerService {
 
     private final TravelerRepository travelerRepository;
@@ -36,26 +38,29 @@ public class TravelerService {
     public TravelerResponse getTravelerById(Long id) {
         Traveler traveler = travelerRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(
-                "Traveler not found with id: " + id));
+                "Traveler not found with ID: " + id));
+
+        verifyOwnership(traveler);
 
         return toResponse(traveler);
     }
 
     public TravelerResponse createTraveler(TravelerRequest request) {
 
-        if (travelerRepository.existsById(request.getId())) {
+        if (travelerRepository.existsByNid(request.getNid())) {
             throw new DuplicateResourceException(
-                    "A traveler with this ID already exists"
+                    "A traveler with this NID already exists"
             );
         }
 
         Traveler traveler = new Traveler(
-                request.getId(),
+                request.getNid(),
                 request.getName(),
                 request.getSurname(),
                 request.getAge(),
+                request.getPhoneNumber(),
                 passwordEncoder.encode(request.getPassword()),
-                "UNPAYED"
+                "UNPAID"
         );
 
         Traveler savedTraveler = travelerRepository.save(traveler);
@@ -65,15 +70,25 @@ public class TravelerService {
     public TravelerResponse updateTraveler(Long id, TravelerUpdateRequest request) {
         Traveler traveler = travelerRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(
-                "Traveler not found with id: " + id));
+                "Traveler not found with ID: " + id));
+
+        verifyOwnership(traveler);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
+        if (!request.getNid().equals(traveler.getNid())) {
+            if (travelerRepository.existsByNid(request.getNid())) {
+                throw new DuplicateResourceException("A traveler with this NID already exists");
+            }
+            traveler.setNid(request.getNid());
+        }
+
         traveler.setName(request.getName());
         traveler.setSurname(request.getSurname());
         traveler.setAge(request.getAge());
+        traveler.setPhoneNumber(request.getPhoneNumber());
         
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             traveler.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -91,22 +106,37 @@ public class TravelerService {
     }
 
     public void deleteTraveler(Long id) {
+        Traveler traveler = travelerRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                "Traveler not found with ID: " + id));
 
-        if (!travelerRepository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Traveler not found with id: " + id);
+        travelerRepository.delete(traveler);
+    }
+
+    private void verifyOwnership(Traveler traveler) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Authentication is required.");
         }
 
-        travelerRepository.deleteById(id);
+        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !("USER_" + traveler.getNid()).equals(authentication.getName())) {
+            throw new AccessDeniedException("You do not have permission to access this traveler's data.");
+        }
     }
 
     private TravelerResponse toResponse(Traveler traveler) {
 
         return new TravelerResponse(
                 traveler.getId(),
+                traveler.getNid(),
                 traveler.getName(),
                 traveler.getSurname(),
                 traveler.getAge(),
+                traveler.getPhoneNumber(),
                 traveler.getPaymentStatus()
         );
     }

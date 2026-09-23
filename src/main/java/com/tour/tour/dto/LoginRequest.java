@@ -1,20 +1,31 @@
 package com.tour.tour.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Pattern;
 
 public class LoginRequest {
 
-    @NotNull(message = "ID cannot be blank")
-    @Positive(message = "ID must be greater than 0")
-    private Long id;
+    @NotBlank(message = "NID cannot be blank")
+    @Pattern(regexp = "^\\d{10}$", message = "NID must be exactly 10 digits")
+    private String nid;
 
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getNid() {
+        return nid;
+    }
+
+    public void setNid(String nid) {
+        this.nid = nid;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
 }
