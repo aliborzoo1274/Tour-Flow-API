@@ -19,10 +19,12 @@ public class Registration {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "travel_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Travel travel;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "traveler_id", nullable = false)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Traveler traveler;
 
     @Column(nullable = false)

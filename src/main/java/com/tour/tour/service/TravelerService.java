@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.AccessDeniedException;
 
+import com.tour.tour.model.Registration;
+import com.tour.tour.model.Travel;
+import com.tour.tour.repository.RegistrationRepository;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +25,12 @@ public class TravelerService {
 
     private final TravelerRepository travelerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RegistrationRepository registrationRepository;
 
-    public TravelerService(TravelerRepository travelerRepository, PasswordEncoder passwordEncoder) {
+    public TravelerService(TravelerRepository travelerRepository, PasswordEncoder passwordEncoder, RegistrationRepository registrationRepository) {
         this.travelerRepository = travelerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.registrationRepository = registrationRepository;
     }
 
     public List<TravelerResponse> getAllTravelers() {
@@ -97,6 +102,12 @@ public class TravelerService {
         Traveler traveler = travelerRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Traveler not found with ID: " + id));
+
+        List<Registration> registrations = registrationRepository.findByTraveler(traveler);
+        for (Registration reg : registrations) {
+            Travel travel = reg.getTravel();
+            travel.setRemainedCapacity(travel.getRemainedCapacity() + 1);
+        }
 
         travelerRepository.delete(traveler);
     }
