@@ -19,6 +19,15 @@ import com.tour.tour.security.SecurityUtils;
 
 import java.util.List;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
+import com.tour.tour.dto.RegistrationRequest;
+
 @Service
 @Transactional
 public class RegistrationService {
@@ -33,7 +42,7 @@ public class RegistrationService {
         this.travelerRepository = travelerRepository;
     }
 
-    public RegistrationResponse registerForTravel(Long travelId) {
+    public RegistrationResponse registerForTravel(Long travelId, RegistrationRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || !auth.getName().startsWith("USER_")) {
             throw new AccessDeniedException("Only logged in travelers can register for travels.");
@@ -54,10 +63,15 @@ public class RegistrationService {
             throw new IllegalStateException("This travel has reached its maximum capacity.");
         }
 
+        if (travel.getBoardingPlaces() == null || !travel.getBoardingPlaces().contains(request.getBoardingPlace())) {
+            throw new IllegalArgumentException("Invalid boarding place selected. Please select a valid boarding place for this travel.");
+        }
+
         travel.setRemainedCapacity(travel.getRemainedCapacity() - 1);
         travelRepository.save(travel);
 
-        Registration registration = new Registration(travel, traveler, 0L);
+        String receiptPath = saveReceiptImage(request.getReceipt());
+        Registration registration = new Registration(travel, traveler, 0L, request.getBoardingPlace(), receiptPath);
         registration = registrationRepository.save(registration);
 
         return toResponse(registration);
@@ -91,6 +105,29 @@ public class RegistrationService {
                 .map(this::toResponse).toList();
     }
 
+    public RegistrationResponse updateRegistration(Long registrationId, RegistrationRequest request) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Registration not found with ID: " + registrationId));
+
+        SecurityUtils.verifyOwnership(registration.getTraveler(), "You do not have permission to update this registration.");
+
+        Travel travel = registration.getTravel();
+        if (travel.getBoardingPlaces() == null || !travel.getBoardingPlaces().contains(request.getBoardingPlace())) {
+            throw new IllegalArgumentException("Invalid boarding place selected. Please select a valid boarding place for this travel.");
+        }
+
+        registration.setBoardingPlace(request.getBoardingPlace());
+        
+        if (request.getReceipt() != null && !request.getReceipt().isEmpty()) {
+            String receiptPath = saveReceiptImage(request.getReceipt());
+            registration.setReceiptImagePath(receiptPath);
+        }
+        
+        registration = registrationRepository.save(registration);
+
+        return toResponse(registration);
+    }
+
     public void deleteRegistration(Long registrationId) {
         Registration registration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Registration not found with ID: " + registrationId));
@@ -103,6 +140,28 @@ public class RegistrationService {
         registrationRepository.delete(registration);
     }
 
+    private String saveReceiptImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) return null;
+        try {
+            String uploadDir = "uploads/receipts/";
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String originalFilename = file.getOriginalFilename();
+            String extension = "";
+            if (originalFilename != null && originalFilename.contains(".")) {
+                extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
+            String fileName = UUID.randomUUID().toString() + extension;
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            return "/uploads/receipts/" + fileName;
+        } catch (IOException e) {
+            throw new RuntimeException("Could not store the receipt file.", e);
+        }
+    }
+
     private RegistrationResponse toResponse(Registration registration) {
         return new RegistrationResponse(
                 registration.getId(),
@@ -111,7 +170,9 @@ public class RegistrationService {
                 registration.getTraveler().getId(),
                 registration.getTraveler().getNid(),
                 registration.getAmountPaid(),
-                registration.getPaymentStatus()
+                registration.getPaymentStatus(),
+                registration.getBoardingPlace(),
+                registration.getReceiptImagePath()
         );
     }
 }

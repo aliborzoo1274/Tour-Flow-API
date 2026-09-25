@@ -30,7 +30,8 @@ public class TravelService {
                 request.getCost(),
                 request.getStartDate(),
                 request.getEndDate(),
-                request.getCapacity()
+                request.getCapacity(),
+                request.getBoardingPlaces()
         );
         travel = travelRepository.save(travel);
         return toResponse(travel);
@@ -67,6 +68,7 @@ public class TravelService {
         travel.setStartDate(request.getStartDate());
         travel.setEndDate(request.getEndDate());
         travel.setRemainedCapacity(newRemainedCapacity);
+        travel.setBoardingPlaces(request.getBoardingPlaces());
         
         travel = travelRepository.save(travel);
         return toResponse(travel);
@@ -87,7 +89,8 @@ public class TravelService {
                 travel.getCost(),
                 travel.getStartDate(),
                 travel.getEndDate(),
-                travel.getRemainedCapacity()
+                travel.getRemainedCapacity(),
+                travel.getBoardingPlaces()
         );
     }
 }

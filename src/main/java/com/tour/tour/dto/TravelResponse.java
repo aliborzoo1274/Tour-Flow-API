@@ -1,16 +1,20 @@
 package com.tour.tour.dto;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public class TravelResponse {
     
     private Long id;
     private String name;
     private Integer capacity;
     private Long cost;
-    private java.time.LocalDate startDate;
-    private java.time.LocalDate endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Integer remainedCapacity;
+    private List<String> boardingPlaces;
 
-    public TravelResponse(Long id, String name, Integer capacity, Long cost, java.time.LocalDate startDate, java.time.LocalDate endDate, Integer remainedCapacity) {
+    public TravelResponse(Long id, String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -18,6 +22,7 @@ public class TravelResponse {
         this.startDate = startDate;
         this.endDate = endDate;
         this.remainedCapacity = remainedCapacity;
+        this.boardingPlaces = boardingPlaces;
     }
 
     public Long getId() {
@@ -36,15 +41,19 @@ public class TravelResponse {
         return cost;
     }
 
-    public java.time.LocalDate getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public java.time.LocalDate getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
     public Integer getRemainedCapacity() {
         return remainedCapacity;
+    }
+
+    public List<String> getBoardingPlaces() {
+        return boardingPlaces;
     }
 }

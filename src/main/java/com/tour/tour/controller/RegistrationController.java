@@ -6,10 +6,13 @@ import com.tour.tour.service.RegistrationService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import com.tour.tour.dto.RegistrationRequest;
 
 @RestController
 public class RegistrationController {
@@ -21,9 +24,11 @@ public class RegistrationController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/travels/{travelId}/register")
-    public ResponseEntity<RegistrationResponse> registerForTravel(@PathVariable Long travelId) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registerForTravel(travelId));
+    @PostMapping(value = "/travels/{travelId}/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<RegistrationResponse> registerForTravel(
+            @PathVariable Long travelId,
+            @Valid @ModelAttribute RegistrationRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registerForTravel(travelId, request));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -44,6 +49,14 @@ public class RegistrationController {
     @GetMapping("/travelers/{travelerId}/registrations")
     public ResponseEntity<List<RegistrationResponse>> getRegistrationsForTraveler(@PathVariable Long travelerId) {
         return ResponseEntity.ok(registrationService.getRegistrationsForTraveler(travelerId));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PutMapping(value = "/registrations/{registrationId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<RegistrationResponse> updateRegistration(
+            @PathVariable Long registrationId,
+            @Valid @ModelAttribute RegistrationRequest request) {
+        return ResponseEntity.ok(registrationService.updateRegistration(registrationId, request));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

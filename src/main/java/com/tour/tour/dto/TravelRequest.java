@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import java.time.LocalDate;
+import java.util.List;
 
 public class TravelRequest {
     
@@ -19,10 +21,12 @@ public class TravelRequest {
     private Long cost;
 
     @NotNull(message = "Start date cannot be null")
-    private java.time.LocalDate startDate;
+    private LocalDate startDate;
 
     @NotNull(message = "End date cannot be null")
-    private java.time.LocalDate endDate;
+    private LocalDate endDate;
+
+    private List<String> boardingPlaces;
 
     public String getName() {
         return name;
@@ -48,19 +52,27 @@ public class TravelRequest {
         this.cost = cost;
     }
 
-    public java.time.LocalDate getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(java.time.LocalDate startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public java.time.LocalDate getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(java.time.LocalDate endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+    public List<String> getBoardingPlaces() {
+        return boardingPlaces;
+    }
+
+    public void setBoardingPlaces(List<String> boardingPlaces) {
+        this.boardingPlaces = boardingPlaces;
     }
 }

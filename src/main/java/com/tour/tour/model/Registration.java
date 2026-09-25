@@ -9,6 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "registrations")
 public class Registration {
@@ -19,24 +22,39 @@ public class Registration {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "travel_id", nullable = false)
-    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Travel travel;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "traveler_id", nullable = false)
-    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Traveler traveler;
 
     @Column(nullable = false)
     private Long amountPaid;
 
+    @Column(name = "boarding_place", nullable = false)
+    private String boardingPlace;
+
+    @Column(name = "receipt_image_path")
+    private String receiptImagePath;
+
     public Registration() {
     }
 
-    public Registration(Travel travel, Traveler traveler, Long amountPaid) {
+    public Registration(Travel travel, Traveler traveler, Long amountPaid, String boardingPlace) {
         this.travel = travel;
         this.traveler = traveler;
         this.amountPaid = amountPaid != null ? amountPaid : 0L;
+        this.boardingPlace = boardingPlace;
+    }
+
+    public Registration(Travel travel, Traveler traveler, Long amountPaid, String boardingPlace, String receiptImagePath) {
+        this.travel = travel;
+        this.traveler = traveler;
+        this.amountPaid = amountPaid != null ? amountPaid : 0L;
+        this.boardingPlace = boardingPlace;
+        this.receiptImagePath = receiptImagePath;
     }
 
     public Long getId() {
@@ -76,5 +94,21 @@ public class Registration {
             return "UNPAID";
         }
         return this.amountPaid >= this.travel.getCost() ? "PAID" : "UNPAID";
+    }
+
+    public String getBoardingPlace() {
+        return boardingPlace;
+    }
+
+    public void setBoardingPlace(String boardingPlace) {
+        this.boardingPlace = boardingPlace;
+    }
+
+    public String getReceiptImagePath() {
+        return receiptImagePath;
+    }
+
+    public void setReceiptImagePath(String receiptImagePath) {
+        this.receiptImagePath = receiptImagePath;
     }
 }

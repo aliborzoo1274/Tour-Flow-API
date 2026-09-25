@@ -9,8 +9,10 @@ public class RegistrationResponse {
     private String travelerNid;
     private Long amountPaid;
     private String paymentStatus;
+    private String boardingPlace;
+    private String receiptImagePath;
 
-    public RegistrationResponse(Long id, Long travelId, String travelName, Long travelerId, String travelerNid, Long amountPaid, String paymentStatus) {
+    public RegistrationResponse(Long id, Long travelId, String travelName, Long travelerId, String travelerNid, Long amountPaid, String paymentStatus, String boardingPlace, String receiptImagePath) {
         this.id = id;
         this.travelId = travelId;
         this.travelName = travelName;
@@ -18,6 +20,8 @@ public class RegistrationResponse {
         this.travelerNid = travelerNid;
         this.amountPaid = amountPaid;
         this.paymentStatus = paymentStatus;
+        this.boardingPlace = boardingPlace;
+        this.receiptImagePath = receiptImagePath;
     }
 
     public Long getId() {
@@ -46,5 +50,13 @@ public class RegistrationResponse {
 
     public String getPaymentStatus() {
         return paymentStatus;
+    }
+
+    public String getBoardingPlace() {
+        return boardingPlace;
+    }
+
+    public String getReceiptImagePath() {
+        return receiptImagePath;
     }
 }
