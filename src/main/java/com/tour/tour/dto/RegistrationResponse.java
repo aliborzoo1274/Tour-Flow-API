@@ -7,14 +7,16 @@ public class RegistrationResponse {
     private String travelName;
     private Long travelerId;
     private String travelerNid;
+    private Long amountPaid;
     private String paymentStatus;
 
-    public RegistrationResponse(Long id, Long travelId, String travelName, Long travelerId, String travelerNid, String paymentStatus) {
+    public RegistrationResponse(Long id, Long travelId, String travelName, Long travelerId, String travelerNid, Long amountPaid, String paymentStatus) {
         this.id = id;
         this.travelId = travelId;
         this.travelName = travelName;
         this.travelerId = travelerId;
         this.travelerNid = travelerNid;
+        this.amountPaid = amountPaid;
         this.paymentStatus = paymentStatus;
     }
 
@@ -36,6 +38,10 @@ public class RegistrationResponse {
 
     public String getTravelerNid() {
         return travelerNid;
+    }
+
+    public Long getAmountPaid() {
+        return amountPaid;
     }
 
     public String getPaymentStatus() {

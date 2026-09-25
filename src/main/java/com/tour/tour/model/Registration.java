@@ -26,15 +26,15 @@ public class Registration {
     private Traveler traveler;
 
     @Column(nullable = false)
-    private String paymentStatus;
+    private Long amountPaid;
 
     public Registration() {
     }
 
-    public Registration(Travel travel, Traveler traveler, String paymentStatus) {
+    public Registration(Travel travel, Traveler traveler, Long amountPaid) {
         this.travel = travel;
         this.traveler = traveler;
-        this.paymentStatus = paymentStatus;
+        this.amountPaid = amountPaid != null ? amountPaid : 0L;
     }
 
     public Long getId() {
@@ -61,11 +61,18 @@ public class Registration {
         this.traveler = traveler;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public Long getAmountPaid() {
+        return amountPaid;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setAmountPaid(Long amountPaid) {
+        this.amountPaid = amountPaid;
+    }
+
+    public String getPaymentStatus() {
+        if (this.travel == null || this.travel.getCost() == null || this.amountPaid == null) {
+            return "UNPAID";
+        }
+        return this.amountPaid >= this.travel.getCost() ? "PAID" : "UNPAID";
     }
 }

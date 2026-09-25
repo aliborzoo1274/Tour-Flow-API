@@ -1,6 +1,6 @@
 package com.tour.tour.controller;
 
-import com.tour.tour.dto.PaymentStatusUpdateRequest;
+import com.tour.tour.dto.PaymentUpdateRequest;
 import com.tour.tour.dto.RegistrationResponse;
 import com.tour.tour.service.RegistrationService;
 import jakarta.validation.Valid;
@@ -27,11 +27,11 @@ public class RegistrationController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/registrations/{registrationId}/payment-status")
-    public ResponseEntity<RegistrationResponse> updatePaymentStatus(
+    @PutMapping("/registrations/{registrationId}/payment")
+    public ResponseEntity<RegistrationResponse> updatePaymentAmount(
             @PathVariable Long registrationId,
-            @Valid @RequestBody PaymentStatusUpdateRequest request) {
-        return ResponseEntity.ok(registrationService.updatePaymentStatus(registrationId, request));
+            @Valid @RequestBody PaymentUpdateRequest request) {
+        return ResponseEntity.ok(registrationService.updatePaymentAmount(registrationId, request));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

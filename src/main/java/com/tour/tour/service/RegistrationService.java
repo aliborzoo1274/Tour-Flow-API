@@ -1,6 +1,6 @@
 package com.tour.tour.service;
 
-import com.tour.tour.dto.PaymentStatusUpdateRequest;
+import com.tour.tour.dto.PaymentUpdateRequest;
 import com.tour.tour.dto.RegistrationResponse;
 import com.tour.tour.exception.DuplicateResourceException;
 import com.tour.tour.exception.ResourceNotFoundException;
@@ -56,17 +56,17 @@ public class RegistrationService {
         travel.setRemainedCapacity(travel.getRemainedCapacity() - 1);
         travelRepository.save(travel);
 
-        Registration registration = new Registration(travel, traveler, "UNPAID");
+        Registration registration = new Registration(travel, traveler, 0L);
         registration = registrationRepository.save(registration);
 
         return toResponse(registration);
     }
 
-    public RegistrationResponse updatePaymentStatus(Long registrationId, PaymentStatusUpdateRequest request) {
+    public RegistrationResponse updatePaymentAmount(Long registrationId, PaymentUpdateRequest request) {
         Registration registration = registrationRepository.findById(registrationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Registration not found with ID: " + registrationId));
 
-        registration.setPaymentStatus(request.getPaymentStatus());
+        registration.setAmountPaid(request.getAmountPaid());
         registration = registrationRepository.save(registration);
 
         return toResponse(registration);
@@ -102,6 +102,7 @@ public class RegistrationService {
                 registration.getTravel().getName(),
                 registration.getTraveler().getId(),
                 registration.getTraveler().getNid(),
+                registration.getAmountPaid(),
                 registration.getPaymentStatus()
         );
     }
