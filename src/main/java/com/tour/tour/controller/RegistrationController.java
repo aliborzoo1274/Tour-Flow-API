@@ -45,4 +45,11 @@ public class RegistrationController {
     public ResponseEntity<List<RegistrationResponse>> getRegistrationsForTraveler(@PathVariable Long travelerId) {
         return ResponseEntity.ok(registrationService.getRegistrationsForTraveler(travelerId));
     }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @DeleteMapping("/registrations/{registrationId}")
+    public ResponseEntity<Void> deleteRegistration(@PathVariable Long registrationId) {
+        registrationService.deleteRegistration(registrationId);
+        return ResponseEntity.noContent().build();
+    }
 }

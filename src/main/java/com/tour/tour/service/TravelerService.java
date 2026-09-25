@@ -8,14 +8,12 @@ import com.tour.tour.exception.DuplicateResourceException;
 import com.tour.tour.model.Traveler;
 import com.tour.tour.repository.TravelerRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.access.AccessDeniedException;
 
 import com.tour.tour.model.Registration;
 import com.tour.tour.model.Travel;
 import com.tour.tour.repository.RegistrationRepository;
+import com.tour.tour.security.SecurityUtils;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +43,7 @@ public class TravelerService {
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Traveler not found with ID: " + id));
 
-        verifyOwnership(traveler);
+        SecurityUtils.verifyOwnership(traveler, "You do not have permission to access this traveler's data.");
 
         return toResponse(traveler);
     }
@@ -76,7 +74,7 @@ public class TravelerService {
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Traveler not found with ID: " + id));
 
-        verifyOwnership(traveler);
+        SecurityUtils.verifyOwnership(traveler, "You do not have permission to access this traveler's data.");
 
         if (!request.getNid().equals(traveler.getNid())) {
             if (travelerRepository.existsByNid(request.getNid())) {
@@ -103,6 +101,8 @@ public class TravelerService {
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Traveler not found with ID: " + id));
 
+        SecurityUtils.verifyOwnership(traveler, "You do not have permission to delete this traveler's account.");
+
         List<Registration> registrations = registrationRepository.findByTraveler(traveler);
         for (Registration reg : registrations) {
             Travel travel = reg.getTravel();
@@ -110,21 +110,6 @@ public class TravelerService {
         }
 
         travelerRepository.delete(traveler);
-    }
-
-    private void verifyOwnership(Traveler traveler) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AccessDeniedException("Authentication is required.");
-        }
-
-        boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin && !("USER_" + traveler.getNid()).equals(authentication.getName())) {
-            throw new AccessDeniedException("You do not have permission to access this traveler's data.");
-        }
     }
 
     private TravelerResponse toResponse(Traveler traveler) {

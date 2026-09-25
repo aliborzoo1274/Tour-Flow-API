@@ -48,7 +48,7 @@ public class TravelerController {
         return ResponseEntity.ok(response);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTraveler(@PathVariable Long id) {
         travelerService.deleteTraveler(id);

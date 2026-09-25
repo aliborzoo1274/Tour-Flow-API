@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.tour.tour.security.SecurityUtils;
 
 import java.util.List;
 
@@ -84,15 +85,22 @@ public class RegistrationService {
         Traveler traveler = travelerRepository.findById(travelerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Traveler not found with ID: " + travelerId));
 
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isAdmin && !auth.getName().equals("USER_" + traveler.getNid())) {
-            throw new AccessDeniedException("You do not have permission to view these registrations.");
-        }
+        SecurityUtils.verifyOwnership(traveler, "You do not have permission to view these registrations.");
 
         return registrationRepository.findByTraveler(traveler).stream()
                 .map(this::toResponse).toList();
+    }
+
+    public void deleteRegistration(Long registrationId) {
+        Registration registration = registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Registration not found with ID: " + registrationId));
+
+        SecurityUtils.verifyOwnership(registration.getTraveler(), "You do not have permission to delete this registration.");
+
+        Travel travel = registration.getTravel();
+        travel.setRemainedCapacity(travel.getRemainedCapacity() + 1);
+
+        registrationRepository.delete(registration);
     }
 
     private RegistrationResponse toResponse(Registration registration) {
