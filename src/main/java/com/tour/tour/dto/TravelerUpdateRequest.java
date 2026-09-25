@@ -25,9 +25,6 @@ public class TravelerUpdateRequest {
 
     private String password;
 
-    @NotBlank(message = "Payment status cannot be blank")
-    private String paymentStatus;
-
     public TravelerUpdateRequest() {
     }
 
@@ -77,13 +74,5 @@ public class TravelerUpdateRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
     }
 }

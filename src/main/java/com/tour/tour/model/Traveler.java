@@ -23,19 +23,17 @@ public class Traveler {
     private Integer age;
     private String phoneNumber;
     private String password;
-    private String paymentStatus;
 
     public Traveler() {
     }
 
-    public Traveler(String nid, String name, String surname, Integer age, String phoneNumber, String password, String paymentStatus) {
+    public Traveler(String nid, String name, String surname, Integer age, String phoneNumber, String password) {
         this.nid = nid;
         this.name = name;
         this.surname = surname;
         this.age = age;
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.paymentStatus = paymentStatus;
     }
 
     public Long getId() {
@@ -92,13 +90,5 @@ public class Traveler {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
     }
 }

@@ -59,8 +59,7 @@ public class TravelerService {
                 request.getSurname(),
                 request.getAge(),
                 request.getPhoneNumber(),
-                passwordEncoder.encode(request.getPassword()),
-                "UNPAID"
+                passwordEncoder.encode(request.getPassword())
         );
 
         Traveler savedTraveler = travelerRepository.save(traveler);
@@ -73,10 +72,6 @@ public class TravelerService {
                 "Traveler not found with ID: " + id));
 
         verifyOwnership(traveler);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!request.getNid().equals(traveler.getNid())) {
             if (travelerRepository.existsByNid(request.getNid())) {
@@ -92,13 +87,6 @@ public class TravelerService {
         
         if (request.getPassword() != null && !request.getPassword().isBlank()) {
             traveler.setPassword(passwordEncoder.encode(request.getPassword()));
-        }
-
-        if (!request.getPaymentStatus().equals(traveler.getPaymentStatus())) {
-            if (!isAdmin) {
-                throw new AccessDeniedException("You do not have permission to modify the payment status.");
-            }
-            traveler.setPaymentStatus(request.getPaymentStatus());
         }
 
         Traveler updatedTraveler = travelerRepository.save(traveler);
@@ -136,8 +124,7 @@ public class TravelerService {
                 traveler.getName(),
                 traveler.getSurname(),
                 traveler.getAge(),
-                traveler.getPhoneNumber(),
-                traveler.getPaymentStatus()
+                traveler.getPhoneNumber()
         );
     }
 }
