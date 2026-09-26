@@ -46,15 +46,16 @@ public class TravelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/registration-status")
+    public ResponseEntity<TravelResponse> updateRegistrationStatus(@PathVariable Long id, @RequestParam boolean closed) {
+        return ResponseEntity.ok(travelService.updateRegistrationStatus(id, closed));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTravel(@PathVariable Long id) {
         travelService.deleteTravel(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{id}/registration-status")
-    public ResponseEntity<TravelResponse> updateRegistrationStatus(@PathVariable Long id, @RequestParam boolean closed) {
-        return ResponseEntity.ok(travelService.updateRegistrationStatus(id, closed));
-    }
 }
