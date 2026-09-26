@@ -74,6 +74,14 @@ public class TravelService {
         return toResponse(travel);
     }
 
+    public TravelResponse updateRegistrationStatus(Long id, boolean closed) {
+        Travel travel = travelRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Travel not found with ID: " + id));
+        travel.setRegistrationClosed(closed);
+        travel = travelRepository.save(travel);
+        return toResponse(travel);
+    }
+
     public void deleteTravel(Long id) {
         if (!travelRepository.existsById(id)) {
             throw new ResourceNotFoundException("Travel not found with ID: " + id);
@@ -90,7 +98,8 @@ public class TravelService {
                 travel.getStartDate(),
                 travel.getEndDate(),
                 travel.getRemainedCapacity(),
-                travel.getBoardingPlaces()
+                travel.getBoardingPlaces(),
+                travel.isRegistrationClosed()
         );
     }
 }

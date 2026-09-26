@@ -55,6 +55,10 @@ public class RegistrationService {
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Travel not found with ID: " + travelId));
 
+        if (travel.isRegistrationClosed()) {
+            throw new IllegalStateException("Registration is closed for this travel.");
+        }
+
         if (registrationRepository.existsByTravelAndTraveler(travel, traveler)) {
             throw new DuplicateResourceException("Traveler is already registered for this travel.");
         }

@@ -13,8 +13,9 @@ public class TravelResponse {
     private LocalDate endDate;
     private Integer remainedCapacity;
     private List<String> boardingPlaces;
+    private boolean registrationClosed;
 
-    public TravelResponse(Long id, String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces) {
+    public TravelResponse(Long id, String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces, boolean registrationClosed) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -23,6 +24,7 @@ public class TravelResponse {
         this.endDate = endDate;
         this.remainedCapacity = remainedCapacity;
         this.boardingPlaces = boardingPlaces;
+        this.registrationClosed = registrationClosed;
     }
 
     public Long getId() {
@@ -55,5 +57,9 @@ public class TravelResponse {
 
     public List<String> getBoardingPlaces() {
         return boardingPlaces;
+    }
+
+    public boolean isRegistrationClosed() {
+        return registrationClosed;
     }
 }

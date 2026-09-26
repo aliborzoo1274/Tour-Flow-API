@@ -45,6 +45,9 @@ public class Travel {
     @Column(name = "boarding_place")
     private List<String> boardingPlaces = new ArrayList<>();
 
+    @Column(name = "registration_closed", nullable = false)
+    private boolean registrationClosed = false;
+
     public Travel() {
     }
 
@@ -56,6 +59,7 @@ public class Travel {
         this.endDate = endDate;
         this.remainedCapacity = remainedCapacity;
         this.boardingPlaces = boardingPlaces != null ? boardingPlaces : new ArrayList<>();
+        this.registrationClosed = false;
     }
 
     public Long getId() {
@@ -120,5 +124,13 @@ public class Travel {
 
     public void setBoardingPlaces(List<String> boardingPlaces) {
         this.boardingPlaces = boardingPlaces != null ? boardingPlaces : new ArrayList<>();
+    }
+
+    public boolean isRegistrationClosed() {
+        return registrationClosed;
+    }
+
+    public void setRegistrationClosed(boolean registrationClosed) {
+        this.registrationClosed = registrationClosed;
     }
 }

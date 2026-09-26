@@ -51,4 +51,10 @@ public class TravelController {
         travelService.deleteTravel(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/registration-status")
+    public ResponseEntity<TravelResponse> updateRegistrationStatus(@PathVariable Long id, @RequestParam boolean closed) {
+        return ResponseEntity.ok(travelService.updateRegistrationStatus(id, closed));
+    }
 }
