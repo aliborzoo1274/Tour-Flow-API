@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public class TravelRequest {
     
@@ -27,6 +28,14 @@ public class TravelRequest {
     private LocalDate endDate;
 
     private List<String> boardingPlaces;
+
+    private String description;
+
+    private MultipartFile coverImage;
+
+    private List<MultipartFile> images;
+
+    private List<String> existingImages;
 
     public String getName() {
         return name;
@@ -74,5 +83,37 @@ public class TravelRequest {
 
     public void setBoardingPlaces(List<String> boardingPlaces) {
         this.boardingPlaces = boardingPlaces;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public MultipartFile getCoverImage() {
+        return coverImage;
+    }
+
+    public void setCoverImage(MultipartFile coverImage) {
+        this.coverImage = coverImage;
+    }
+
+    public List<MultipartFile> getImages() {
+        return images;
+    }
+
+    public void setImages(List<MultipartFile> images) {
+        this.images = images;
+    }
+
+    public List<String> getExistingImages() {
+        return existingImages;
+    }
+
+    public void setExistingImages(List<String> existingImages) {
+        this.existingImages = existingImages;
     }
 }

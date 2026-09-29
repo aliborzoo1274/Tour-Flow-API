@@ -6,6 +6,7 @@ import com.tour.tour.service.TravelService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,14 +33,14 @@ public class TravelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<TravelResponse> createTravel(@Valid @RequestBody TravelRequest request) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TravelResponse> createTravel(@Valid @ModelAttribute TravelRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(travelService.createTravel(request));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
-    public ResponseEntity<TravelResponse> updateTravel(@PathVariable Long id, @Valid @RequestBody TravelRequest request) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<TravelResponse> updateTravel(@PathVariable Long id, @Valid @ModelAttribute TravelRequest request) {
         return ResponseEntity.ok(travelService.updateTravel(id, request));
     }
 

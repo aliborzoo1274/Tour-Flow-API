@@ -48,10 +48,21 @@ public class Travel {
     @Column(name = "registration_closed", nullable = false)
     private boolean registrationClosed = false;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "cover_image_path")
+    private String coverImagePath;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "travel_images", joinColumns = @JoinColumn(name = "travel_id"))
+    @Column(name = "image_path")
+    private List<String> imagePaths = new ArrayList<>();
+
     public Travel() {
     }
 
-    public Travel(String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces) {
+    public Travel(String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces, String description, String coverImagePath, List<String> imagePaths) {
         this.name = name;
         this.capacity = capacity;
         this.cost = cost;
@@ -60,6 +71,9 @@ public class Travel {
         this.remainedCapacity = remainedCapacity;
         this.boardingPlaces = boardingPlaces != null ? boardingPlaces : new ArrayList<>();
         this.registrationClosed = false;
+        this.description = description;
+        this.coverImagePath = coverImagePath;
+        this.imagePaths = imagePaths != null ? imagePaths : new ArrayList<>();
     }
 
     public Long getId() {
@@ -132,5 +146,29 @@ public class Travel {
 
     public void setRegistrationClosed(boolean registrationClosed) {
         this.registrationClosed = registrationClosed;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCoverImagePath() {
+        return coverImagePath;
+    }
+
+    public void setCoverImagePath(String coverImagePath) {
+        this.coverImagePath = coverImagePath;
+    }
+
+    public List<String> getImagePaths() {
+        return imagePaths;
+    }
+
+    public void setImagePaths(List<String> imagePaths) {
+        this.imagePaths = imagePaths != null ? imagePaths : new ArrayList<>();
     }
 }
