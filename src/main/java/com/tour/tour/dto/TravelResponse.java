@@ -17,8 +17,9 @@ public class TravelResponse {
     private String description;
     private String coverImagePath;
     private List<String> imagePaths;
+    private List<CancellationRuleResponse> cancellationRules;
 
-    public TravelResponse(Long id, String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces, boolean registrationClosed, String description, String coverImagePath, List<String> imagePaths) {
+    public TravelResponse(Long id, String name, Integer capacity, Long cost, LocalDate startDate, LocalDate endDate, Integer remainedCapacity, List<String> boardingPlaces, boolean registrationClosed, String description, String coverImagePath, List<String> imagePaths, List<CancellationRuleResponse> cancellationRules) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -31,6 +32,7 @@ public class TravelResponse {
         this.description = description;
         this.coverImagePath = coverImagePath;
         this.imagePaths = imagePaths;
+        this.cancellationRules = cancellationRules;
     }
 
     public Long getId() {
@@ -79,5 +81,9 @@ public class TravelResponse {
 
     public List<String> getImagePaths() {
         return imagePaths;
+    }
+
+    public List<CancellationRuleResponse> getCancellationRules() {
+        return cancellationRules;
     }
 }

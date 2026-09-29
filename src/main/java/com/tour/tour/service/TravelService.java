@@ -2,6 +2,7 @@ package com.tour.tour.service;
 
 import com.tour.tour.dto.TravelRequest;
 import com.tour.tour.dto.TravelResponse;
+import com.tour.tour.dto.CancellationRuleResponse;
 import com.tour.tour.exception.ResourceNotFoundException;
 import com.tour.tour.model.Travel;
 import com.tour.tour.repository.TravelRepository;
@@ -17,6 +18,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDate;
 
 @Service
 @Transactional
@@ -169,8 +171,18 @@ public class TravelService {
                 travel.isRegistrationClosed(),
                 travel.getDescription(),
                 travel.getCoverImagePath(),
-                travel.getImagePaths()
+                travel.getImagePaths(),
+                calculateCancellationRules(travel.getStartDate())
         );
+    }
+
+    private List<CancellationRuleResponse> calculateCancellationRules(LocalDate startDate) {
+        List<CancellationRuleResponse> rules = new ArrayList<>();
+        rules.add(new CancellationRuleResponse(null, startDate.minusDays(9), 10));
+        rules.add(new CancellationRuleResponse(startDate.minusDays(8), startDate.minusDays(6), 30));
+        rules.add(new CancellationRuleResponse(startDate.minusDays(5), startDate.minusDays(3), 60));
+        rules.add(new CancellationRuleResponse(startDate.minusDays(2), null, 100));
+        return rules;
     }
 
     private String saveImage(MultipartFile file, String dirName) {
@@ -204,7 +216,7 @@ public class TravelService {
         }
     }
 
-    private String generateTravelDirName(String name, java.time.LocalDate startDate) {
+    private String generateTravelDirName(String name, LocalDate startDate) {
         String safeName = name.replaceAll("[^a-zA-Z0-9.-]", "_");
         return safeName + "_" + startDate.toString();
     }
