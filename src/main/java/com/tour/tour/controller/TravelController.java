@@ -21,13 +21,11 @@ public class TravelController {
         this.travelService = travelService;
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping
     public ResponseEntity<List<TravelResponse>> getAllTravels() {
         return ResponseEntity.ok(travelService.getAllTravels());
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/{id}")
     public ResponseEntity<TravelResponse> getTravelById(@PathVariable Long id) {
         return ResponseEntity.ok(travelService.getTravelById(id));
