@@ -217,7 +217,7 @@ public class TravelService {
     }
 
     private String generateTravelDirName(String name, LocalDate startDate) {
-        String safeName = name.replaceAll("[^a-zA-Z0-9.-]", "_");
+        String safeName = name.replaceAll("[^\\p{L}\\p{N}.-]", "_");
         return safeName + "_" + startDate.toString();
     }
 }
