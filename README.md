@@ -43,6 +43,55 @@ java -version
 
 On Windows PowerShell, use `.\mvnw.cmd` instead of `./mvnw`.
 
+## Run with Docker Compose
+
+Docker Compose starts the API and PostgreSQL together. Install Docker Desktop (or Docker Engine with the Compose plugin), then set a JWT secret before starting the stack:
+
+PowerShell:
+
+```powershell
+$env:JWT_SECRET_KEY = "replace-with-a-long-random-secret"
+docker compose up --build
+```
+
+Bash:
+
+```bash
+export JWT_SECRET_KEY="replace-with-a-long-random-secret"
+docker compose up --build
+```
+
+The API is available at `http://localhost:8080`. PostgreSQL is published on port `5432` by default. The database and uploaded files are stored in the named volumes `postgres_data` and `uploads_data`, so they survive container restarts.
+
+Useful commands:
+
+```bash
+# Start in the background
+docker compose up --build -d
+
+# Follow API logs
+docker compose logs -f api
+
+# Stop containers without deleting data
+docker compose down
+
+# Stop containers and delete the database and uploaded files
+docker compose down -v
+```
+
+Compose reads these optional environment variables:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `JWT_SECRET_KEY` | Required | Secret used to sign JWTs |
+| `POSTGRES_DB` | `tour_db` | PostgreSQL database name |
+| `POSTGRES_USER` | `postgres` | PostgreSQL username |
+| `POSTGRES_PASSWORD` | `postgres` | PostgreSQL password |
+| `POSTGRES_PORT` | `5432` | Host port for PostgreSQL |
+| `API_PORT` | `8080` | Host port for the API |
+
+For production, provide non-default database credentials and a strong secret through an environment file or your deployment secret manager.
+
 ## Local setup
 
 ### 1. Create the database
