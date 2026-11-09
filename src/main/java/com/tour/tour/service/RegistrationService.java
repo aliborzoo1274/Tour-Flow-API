@@ -71,6 +71,10 @@ public class RegistrationService {
             throw new IllegalArgumentException("Invalid boarding place selected. Please select a valid boarding place for this travel.");
         }
 
+        if (request.getReceipt() == null || request.getReceipt().isEmpty()) {
+            throw new IllegalArgumentException("Receipt image is required.");
+        }
+
         travel.setRemainedCapacity(travel.getRemainedCapacity() - 1);
         travelRepository.save(travel);
 

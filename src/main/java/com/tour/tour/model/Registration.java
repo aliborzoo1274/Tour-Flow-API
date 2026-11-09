@@ -36,7 +36,7 @@ public class Registration {
     @Column(name = "boarding_place", nullable = false)
     private String boardingPlace;
 
-    @Column(name = "receipt_image_path")
+    @Column(name = "receipt_image_path", nullable = false)
     private String receiptImagePath;
 
     public Registration() {

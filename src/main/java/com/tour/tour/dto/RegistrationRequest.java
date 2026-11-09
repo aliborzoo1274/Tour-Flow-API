@@ -1,6 +1,7 @@
 package com.tour.tour.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.web.multipart.MultipartFile;
 
 public class RegistrationRequest {
@@ -8,6 +9,7 @@ public class RegistrationRequest {
     @NotBlank(message = "Boarding place cannot be blank")
     private String boardingPlace;
 
+    @NotNull(message = "Receipt image cannot be null")
     private MultipartFile receipt;
 
     public String getBoardingPlace() {
